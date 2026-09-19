@@ -1,9 +1,10 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Nhóm:** [Tên nhóm]
+**Nhóm:** Chưa có tên nhóm trong tài liệu dự án
 
-**Thành viên:** [Họ tên từng thành viên]  
-**Ngày:** [Ngày nộp]
+**Thành viên:** Nguyễn Chí Công (chiến lược heading), Hoàng Trung Anh (SentenceChunker); chưa có thông tin thành viên còn lại.
+
+**Ngày lập báo cáo:** 19/09/2026
 
 > **Nộp 1 bản / nhóm.** Phần cá nhân (hướng tiếp cận, kết quả riêng, dự đoán…) mỗi thành viên nộp riêng trong `REPORT_CANHAN.md`. Chi tiết thang điểm: `docs/SCORING.md`.
 
@@ -15,11 +16,11 @@
 
 ### Chủ đề (Domain) & Lý Do Chọn
 
-**Chủ đề:** [ví dụ: Customer support FAQ, Luật Việt Nam, công thức nấu ăn, ...]
+**Chủ đề:** Quy định và dịch vụ đăng ký học phần của Carnegie Mellon University (CMU).
 
 **Tại sao nhóm chọn chủ đề này?**
 
-> *Viết 2-3 câu:*
+> Chín tài liệu công khai từ University Registrar cùng xoay quanh lập lịch, đăng ký học phần, giờ bắt đầu đăng ký, thay đổi học phần và voucher. Các quy trình này có mốc thời gian, điều kiện và đối tượng áp dụng cụ thể, nên phù hợp để kiểm tra liệu hệ thống có truy xuất đúng đoạn làm căn cứ cho câu trả lời. Bộ tài liệu có bốn giá trị `audience` (`student`, `faculty`, `staff`, `all`), cho phép thử lọc metadata theo người dùng.
 
 ### Danh sách tài liệu (Data Inventory)
 
@@ -84,27 +85,21 @@ Chạy `ChunkingStrategyComparator().compare(body, chunk_size=200)` trên ba tà
 
 ### Chiến lược của từng thành viên
 
-> Mỗi thành viên điền một khối dưới đây (copy thêm nếu nhóm có nhiều hơn 3 người).
+Thông tin của Nguyễn Chí Công và Hoàng Trung Anh lấy từ phần đã ghi trong báo cáo và mã hiện có. Chưa có tên, mã và kết quả của thành viên 2 trong dự án.
 
 **Thành viên 1 — Nguyễn Chí Công**
 
 - **Loại chiến lược:** custom `HeadingChunker` → `RecursiveChunker`
 - **Mô tả & lý do chọn cho chủ đề này:** Trang quy định CMU có heading/mục sẵn, nên mỗi heading là đơn vị ngữ nghĩa tự nhiên. Chiến lược tách trước heading; nếu mục vượt 500 ký tự thì dùng recursive để cắt phần thân và lặp lại heading ở từng mảnh con, nhờ vậy chunk sau vẫn biết mình đang nói về mục nào.
-- **Code snippet (nếu custom):**
+- **Mã thực thi:** Chưa có file triển khai hoặc kết quả chạy của Nguyễn Chí Công trong dự án hiện tại; cần bổ sung để nhóm có thể tái lập phép so sánh. Mô tả ở trên là chiến lược do thành viên ghi trong báo cáo. Ở bản corpus hiện tại, ngoài tiêu đề cấp `#`, chỉ `staff-non-degree-registration.md` còn tiêu đề cấp `##`; các nhãn mục của tài liệu khác là văn bản thường, nên cần thống nhất bản corpus khi kiểm tra chiến lược theo heading.
 
-```python
-class HeadingChunker:
-    # split at Markdown headings; long sections use RecursiveChunker
-    # and prefix the original heading to every child chunk
-```
+**Thành viên 2 — Chưa có thông tin**
 
-**Thành viên 2 — [Tên]**
+- **Loại chiến lược:** Chưa được cung cấp.
+- **Mô tả & lý do chọn:** Cần thành viên bổ sung chiến lược thực tế, tham số và lý do chọn trước khi so sánh.
+- **Mã thực thi:** Chưa được cung cấp.
 
-- **Loại chiến lược:**
-- **Mô tả & lý do chọn:**
-- **Code snippet (nếu custom):**
-
-**Thành viên 3 — [Hoàng Trung Anh]**
+**Thành viên 3 — Hoàng Trung Anh**
 
 - **Loại chiến lược:** `SentenceChunker(max_sentences_per_chunk=3)`.
 - **Mô tả & lý do chọn:** Tách theo dấu kết thúc câu rồi gom tối đa ba câu liên tiếp thành một chunk. Cách này giữ nguyên câu và các bước hướng dẫn ngắn trong tài liệu đăng ký, voucher và FAQ. Ranh giới có thể cắt giữa một quy trình nhiều câu, và chunk dài không bị giới hạn theo số ký tự; cần đối chiếu top-3 với đáp án chuẩn để đánh giá.
@@ -116,15 +111,15 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 ### So Sánh Giữa Các Thành Viên
 
-| Thành viên | Chiến lược (Strategy) | Điểm truy xuất (/10) | Điểm mạnh | Điểm yếu |
-| ---------- | --------------------- | -------------------- | --------- | -------- |
-|            |                       |                      |           |          |
-|            |                       |                      |           |          |
-|            |                       |                      |           |          |
+| Thành viên | Chiến lược | Kết quả hiện có | Điểm mạnh | Điểm yếu / giới hạn |
+| ---------- | ---------- | --------------- | --------- | ------------------- |
+| Nguyễn Chí Công | Heading → Recursive | Bảng mục 3 ghi 5 kết quả top-1, nhưng thiếu log, cấu hình embedding và câu trả lời agent; chưa thể chấm /10. | Theo thiết kế, giữ tiêu đề khi chia mục dài. | Chưa có mã và dữ liệu chạy cùng phiên bản để xác minh các điểm số đã ghi. |
+| Thành viên 2 | Chưa có thông tin | Chưa có kết quả. | Chưa đánh giá. | Chưa thể so sánh. |
+| Hoàng Trung Anh | SentenceChunker, 3 câu/chunk | 75 chunk; top-3 có một đoạn liên quan một phần ở câu 1; chưa chạy agent nên chưa chấm /10. | Không cắt giữa câu; ít chunk hơn fixed/recursive trong baseline. | Một quy trình có thể trải qua nhiều chunk; lượt chạy hiện dùng embedding giả lập. |
 
 **Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
 
-> *Viết 2-3 câu — đây là phần được đánh giá cao nhất (khả năng suy nghĩ & giải thích):*
+> Chưa thể xếp hạng giữa các thành viên: kết quả SentenceChunker đã chạy bằng `MockEmbedder`, còn bảng điểm Heading hiện thiếu mã, cấu hình embedding và log để tái lập; thành viên 2 chưa có kết quả. Về mặt cấu trúc, các quy trình nhiều bước như Course Time Conflict và Voucher Instructions dễ bị `SentenceChunker` chia qua nhiều chunk; chiến lược theo mục có thể giữ ngữ cảnh tốt hơn nếu corpus có heading Markdown và được kiểm tra trên cùng bộ câu hỏi, embedding và `top_k`.
 
 ---
 
@@ -132,32 +127,33 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 ### Câu hỏi đánh giá & Câu trả lời chuẩn (nhóm thống nhất)
 
-> **Đúng 5 câu hỏi**, đa dạng, có thể kiểm chứng; **ít nhất 1 câu** cần lọc metadata mới trả lời tốt. Đây là bộ câu hỏi chung cho mọi thành viên chạy.
+Năm câu hỏi dùng chung đều có căn cứ trong corpus. Cột cuối giữ `doc_id` của tài liệu nguồn để `bench.py` đọc đúng bộ câu hỏi. Điều kiện “ít nhất một câu cần lọc `audience=student` mới trả lời đúng” chưa được chứng minh bằng lượt chạy hiện có (xem đối chiếu câu 5 bên dưới).
 
-| #   | Câu hỏi (Query)                                                         | Câu trả lời chuẩn (Gold Answer)                                                                                                      | Chunk nào chứa thông tin?  |
+| #   | Câu hỏi (Query)                                                         | Câu trả lời chuẩn (Gold Answer)                                                                                                      | Tài liệu nguồn (`doc_id`) |
 | --- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
-| 1   | Quy trình đăng ký hai lớp trùng giờ là gì?                              | Gửi Course Time Conflict Request trên SIO; advisor và hai giảng viên phê duyệt, sau đó sinh viên chấp nhận điều kiện và đăng ký.     | `course-registration`      |
+| 1   | Quy trình đăng ký hai lớp trùng giờ là gì?                              | Gửi Course Time Conflict Request trên SIO; advisor và hai giảng viên phê duyệt, sau đó sinh viên chấp nhận điều kiện và đăng ký.     | `course-registration` |
 | 2   | Sinh viên đại học năm nhất đăng ký vào ngày nào trong kỳ thu/xuân?      | Thứ Sáu.                                                                                                                             | `registration-start-times` |
-| 3   | Trước khi dùng voucher sau hạn drop/P/NP, sinh viên phải làm gì?        | Trao đổi với primary academic advisor; advisor nhập voucher vào S3, sinh viên xác nhận trong 24 giờ.                                 | `course-changes`           |
-| 4   | Sinh viên đại học có bao nhiêu voucher trong toàn khóa và trong một kỳ? | Ba voucher toàn khóa; tối đa một voucher mỗi kỳ (kể cả hè).                                                                          | `course-changes`           |
+| 3   | Trước khi dùng voucher sau hạn drop/P/NP, sinh viên phải làm gì?        | Trao đổi với primary academic advisor; advisor nhập voucher vào S3, sinh viên xác nhận trong 24 giờ.                                 | `course-changes` |
+| 4   | Sinh viên đại học có bao nhiêu voucher trong toàn khóa và trong một kỳ? | Ba voucher toàn khóa; tối đa một voucher mỗi kỳ (kể cả hè).                                                                          | `course-changes` |
 | 5   | Tôi có giờ bắt đầu đăng ký cụ thể không?                                | Với sinh viên, giờ được gán và xem ở trang Registration hoặc Plan Schedule trong SIO; undergraduate dùng ba chữ số cuối của ID Card. | `registration-start-times` |
+
+Trong lượt SentenceChunker hiện tại, các đoạn chứa dữ kiện tương ứng là: câu 1 `course-registration#5–#7`; câu 2 `registration-start-times#2`; câu 3 `course-changes#17–#18`; câu 4 `course-changes#15`; câu 5 `registration-start-times#0–#1`. Việc một đáp án nằm ở nhiều chunk là giới hạn cần tính khi đánh giá top-3.
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
-> Cách chấm (theo `docs/SCORING.md`): **2 điểm/câu** — top-3 chứa chunk liên quan + agent trả lời đúng (2), có liên quan nhưng thiếu/không ở top-1 (1), không có trong top-3 (0).
+Theo `docs/SCORING.md`, mỗi câu có tối đa 2 điểm nếu top-3 chứa căn cứ liên quan và câu trả lời của agent chính xác. Bảng dưới giữ nguyên các số top-1 Heading đã được điền trước đó; dự án hiện không có log, mã chạy hoặc tên embedding tương ứng để xác minh. Kết quả Sentence lấy từ [`ket_qua_benchmark.txt`](../ket_qua_benchmark.txt), dùng `MockEmbedder`, `top_k=3`; không có câu trả lời agent của hai lượt trong dự án để chấm điểm /10 hoặc chọn chiến lược tốt nhất.
 
-| #   | Câu hỏi                             | Chiến lược tốt nhất cho câu này                 | Có chunk liên quan trong top-3?                    | Ghi chú                                                           |
-| --- | ----------------------------------- | ----------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------- |
-| 1   | Quy trình đăng ký lớp trùng giờ     | HeadingChunker + Recursive                      | Có, top-1: `course-registration`, score 0.764      | Chunk mô tả đúng Course Time Conflict Request và chuỗi phê duyệt. |
-| 2   | Ngày đăng ký của sinh viên năm nhất | HeadingChunker + Recursive                      | Có, top-1: `registration-start-times`, score 0.760 | Chunk nêu rõ Friday.                                              |
-| 3   | Thao tác trước khi dùng voucher     | HeadingChunker + Recursive + `audience=student` | Có, top-1: `course-changes`, score 0.783           | Lọc bỏ chunk faculty/staff trước xếp hạng.                        |
-| 4   | Số voucher của undergraduate        | HeadingChunker + Recursive + `audience=student` | Có, top-1: `course-changes`, score 0.842           | Chunk chứa chính xác ba voucher và một mỗi kỳ.                    |
-| 5   | Vị trí xem start time trong SIO     | HeadingChunker + Recursive + `audience=student` | Có, top-1: `registration-four-steps`, score 0.821  | Chunk chứa đúng Registration page / Course Schedule tab.          |
-
+| # | Heading → Recursive (số đã ghi, chưa xác minh) | SentenceChunker (đã chạy) | Đối chiếu với đáp án chuẩn |
+| --- | --- | --- | --- |
+| 1 | Top-1 `course-registration`, 0,764 | Top-3 có `course-registration#5`, 0,227 | Sentence nêu bước gửi yêu cầu trên SIO nhưng thiếu chuỗi phê duyệt ở `#6–#7`. |
+| 2 | Top-1 `registration-start-times`, 0,760 | Top-3 đều thuộc `voucher-process-faq` | Sentence không lấy được đoạn nêu Friday. |
+| 3 | Top-1 `course-changes`, 0,783; báo cáo ghi đã lọc student | Top-1 `course-changes#10`, 0,290; top-3 thiếu `#17–#18` | Sentence lấy phần late withdrawal, không đủ bước voucher. |
+| 4 | Top-1 `course-changes`, 0,842; báo cáo ghi đã lọc student | Top-1 `course-changes#6`, 0,233; top-3 thiếu `#15` | Sentence lấy hạn drop, không lấy số voucher. |
+| 5 | Top-1 `registration-four-steps`, 0,821; báo cáo ghi đã lọc student | Top-1 `course-registration#8`, 0,413; top-3 thiếu `registration-start-times` | Lọc student trong lượt Sentence không đổi top-3; kết quả Heading top-1 là tài liệu khác tài liệu gold. |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
 
-> Có. Query 3, 4 và 5 gọi `search_with_filter(..., metadata_filter={"audience": "student"})`, nên các chunk faculty/staff/all bị loại **trước** khi xếp hạng. Điều này đặc biệt cần khi các tài liệu cùng nói về registration nhưng quy tắc áp dụng cho các đối tượng khác nhau; không lọc, top-k có thể bị chiếm bởi chunk sai đối tượng.
+> Với SentenceChunker, lọc `audience=student` ở câu 5 giảm tập ứng viên từ 75 xuống 57 chunk, nhưng top-3 và đáp án có thể rút ra vẫn không đổi. Bảng Heading ghi đã lọc ở câu 3–5, song thiếu kết quả không lọc để đo tác động; do đó chưa thể kết luận lọc đã cải thiện truy xuất. Nhóm cần chạy hai lượt trên cùng embedding và corpus, rồi ghi top-3 trước/sau lọc cho một câu hỏi mà câu trả lời phụ thuộc đối tượng áp dụng.
 
 ---
 
@@ -165,15 +161,17 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 **Những phân tích (insights) hay nhất nhóm sẽ trình bày:**
 
-> *Liệt kê 2-3 ý:*
+- Corpus có 9 tài liệu chính thức về đăng ký học phần, gồm 6 tài liệu `student`, 1 `faculty`, 1 `staff` và 1 `all`; metadata cho phép lọc theo đối tượng trước khi xếp hạng.
+- Với `course-registration.md` ở baseline `chunk_size=200`, SentenceChunker tạo 10 chunk, FixedSizeChunker 20 và RecursiveChunker 26. Sentence giữ nguyên câu nhưng không bảo đảm giữ trọn quy trình: đáp án câu 1 nằm ở ba chunk `#5–#7`.
+- Benchmark Sentence dùng 75 chunk và `MockEmbedder`: chỉ câu 1 có đoạn top-3 liên quan một phần; lọc student ở câu 5 không thay đổi top-3. Điểm similarity của mock không chứng minh chất lượng hiểu nghĩa giữa câu hỏi tiếng Việt và tài liệu tiếng Anh.
 
 **Bài học rút ra khi so sánh trong nhóm:**
 
-> *Viết 2-3 câu — cùng tài liệu nhưng chiến lược khác nhau dẫn tới khác biệt gì?*
+> Cùng một tài liệu, ranh giới chunk quyết định agent nhìn thấy cả quy trình hay chỉ một bước: SentenceChunker giữ nguyên từng câu nhưng tách quy trình Course Time Conflict và voucher qua nhiều chunk. Baseline cho thấy đánh đổi giữa số chunk và độ dài trung bình; chưa thể kết luận Heading tốt hơn Sentence từ các điểm hiện có vì chưa có kết quả các thành viên trên cùng corpus, embedding và cách đánh giá. Phần trình bày nên đối chiếu trực tiếp nội dung chunk, không chỉ so score.
 
 **Nếu làm lại, nhóm sẽ thay đổi gì trong chiến lược dữ liệu (data strategy)?**
 
-> *Viết 2-3 câu:*
+> Nhóm sẽ cố định một phiên bản corpus cho mọi thành viên, giữ cấu trúc Markdown heading nếu cần thử chiến lược theo mục, và lưu log gồm cấu hình embedding, chunk ID cùng top-3 của cả năm câu. Sau đó chạy lại bằng cùng một mô hình embedding có hỗ trợ tiếng Việt–Anh, thử cả lượt có/không lọc `audience=student`, và kiểm tra câu trả lời agent với đáp án chuẩn. Với các quy trình nhiều bước, nhóm sẽ thử kích thước hoặc độ chồng lấp câu để giảm việc đáp án nằm rải trên nhiều chunk.
 
 ---
 
@@ -181,8 +179,8 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 | Tiêu chí                                 | Điểm tự đánh giá |
 | ---------------------------------------- | ---------------- |
-| Lựa chọn tài liệu (Document Set Quality) | / 10             |
-| Thiết kế chiến lược (Strategy Design)    | / 15             |
-| Chất lượng truy xuất (Retrieval Quality) | / 10             |
-| Thuyết trình (Demo)                      | / 5              |
-| **Tổng phần nhóm**                       | **/ 40**         |
+| Lựa chọn tài liệu (Document Set Quality) | Chưa tự chấm / 10; đã có 9 tài liệu và metadata, còn thiếu bằng chứng câu hỏi cần lọc để trả lời đúng. |
+| Thiết kế chiến lược (Strategy Design)    | Chưa tự chấm / 15; chưa có mã và kết quả của tất cả thành viên trên cùng cấu hình. |
+| Chất lượng truy xuất (Retrieval Quality) | Chưa tự chấm / 10; mới có benchmark mock của Sentence, chưa có câu trả lời agent. |
+| Thuyết trình (Demo)                      | Chưa tự chấm / 5; chưa có thông tin buổi demo. |
+| **Tổng phần nhóm**                       | **Chưa thể cộng / 40** |
