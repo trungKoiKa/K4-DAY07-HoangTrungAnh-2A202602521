@@ -1,0 +1,64 @@
+Strategy: SentenceChunker {'max_sentences_per_chunk': 3}
+Embedding provider: mock
+Loaded 75 chunks from 9 documents.
+Mock scores do not represent semantic retrieval quality.
+
+Q1: Quy trình đăng ký hai lớp trùng giờ là gì?
+Gold answer: Gửi Course Time Conflict Request trên SIO; advisor và hai giảng viên phê duyệt, sau đó sinh viên chấp nhận điều kiện và đăng ký.
+Gold doc_id: course-registration; metadata_filter=None
+  Top-1: score=0.309; doc_id=registration-start-times; chunk=registration-start-times#2; audience=student
+    For example: Semester 1: Student assigned to time block 4 (the latest group) Semester 2: Student moves to time block 3 Semester 3: Student moves to time block 2 Semester 4: Student moves to time block 1 (the earliest group) Semester 5: Stud
+  Top-2: score=0.291; doc_id=course-changes; chunk=course-changes#13; audience=student
+    View a grade conversion process explanation. Transcript impact: Courses taken as P/NP appear as "P" on the transcript if passed and "N" if not passed. Tuition impact: Tuition is not adjusted for courses taken as P/NP.
+  Top-3: score=0.227; doc_id=course-registration; chunk=course-registration#5; audience=student
+    Course Time Conflicts Students who wish to register for two course sections with overlapping meeting times must submit a Course Time Conflict Request through Student Information Online (SIO). Approval does not guarantee registration; studen
+
+Q2: Sinh viên đại học năm nhất đăng ký vào ngày nào trong kỳ thu/xuân?
+Gold answer: Thứ Sáu.
+Gold doc_id: registration-start-times; metadata_filter=None
+  Top-1: score=0.333; doc_id=voucher-process-faq; chunk=voucher-process-faq#0; audience=student
+    # Voucher Process Frequently Asked Questions Students should carefully review the Course Changes webpage and consult with their primary academic advisors before initiating any voucher requests. What is the deadline for making a voucher requ
+  Top-2: score=0.268; doc_id=voucher-process-faq; chunk=voucher-process-faq#6; audience=student
+    It is advised to drop your course by the host institution deadline to avoid an incomplete or undesired final grade. Please be sure to fill out a Course Withdrawal (pdf) form by the host institution drop deadline. I have already made a late 
+  Top-3: score=0.201; doc_id=voucher-process-faq; chunk=voucher-process-faq#1; audience=student
+    on the day before last day of classes. If your primary academic advisor is unavailable to discuss your voucher elections, please consult with other resources within your academic department. If I would like to use one of my vouchers over th
+
+Q3: Trước khi dùng voucher sau hạn drop/P/NP, sinh viên phải làm gì?
+Gold answer: Trao đổi với primary academic advisor; advisor nhập voucher vào S3, sinh viên xác nhận trong 24 giờ.
+Gold doc_id: course-changes; metadata_filter=None
+  Top-1: score=0.290; doc_id=course-changes; chunk=course-changes#10; audience=student
+    TUITION IMPACT: Tuition is not adjusted during this period. LATE WITHDRAWAL: Course withdrawals after the deadline are not permitted. Students should discuss options with their academic advisor.
+  Top-2: score=0.202; doc_id=plan-course-schedule; chunk=plan-course-schedule#2; audience=student
+    Stellic can help you track your progress toward earning your degree, displays co-requisites and pre-requisites, and more. Step 3: Plan Course Schedule in SIO In addition to Stellic, you can use the Plan Course Schedule feature in Student In
+  Top-3: score=0.200; doc_id=plan-course-schedule; chunk=plan-course-schedule#1; audience=student
+    Step 1: Browse the SOC Published before each semester begins, the SOC displays the courses available in any given semester, listing courses, titles, meeting times, classroom assignments and instructor information. The SOC will also display 
+
+Q4: Sinh viên đại học có bao nhiêu voucher trong toàn khóa và trong một kỳ?
+Gold answer: Ba voucher toàn khóa; tối đa một voucher mỗi kỳ (kể cả hè).
+Gold doc_id: course-changes; metadata_filter=None
+  Top-1: score=0.233; doc_id=course-changes; chunk=course-changes#6; audience=student
+    Drop Deadline: Fall & Spring Semesters: Monday after six weeks of classes. Minis, Micros, Doctoral Course-Sections & Summer Sessions: View Academic Calendar for deadlines. Process: Students taking undergraduate and master's courses may drop
+  Top-2: score=0.209; doc_id=faculty-staff-non-degree-registration; chunk=faculty-staff-non-degree-registration#12; audience=faculty
+    Otherwise, you will receive a letter grade for the course. Please note that you will still have to apply tuition benefits toward courses taken pass/no pass and audited courses, and that you must be registered for a course in order to sit in
+  Top-3: score=0.192; doc_id=course-changes; chunk=course-changes#7; audience=student
+    Transcript impact: Courses dropped by the deadline do not appear on the transcript. Tuition impact: Tuition is not adjusted for courses dropped during this period. LATE DROP: Students who wish to drop a course after the drop deadline must c
+
+Q5: Tôi có giờ bắt đầu đăng ký cụ thể không?
+Gold answer: Với sinh viên, giờ được gán và xem ở trang Registration hoặc Plan Schedule trong SIO; undergraduate dùng ba chữ số cuối của ID Card.
+Gold doc_id: registration-start-times; metadata_filter=None
+  Top-1: score=0.413; doc_id=course-registration; chunk=course-registration#8; audience=student
+    Review the updated Course Time Conflicts guidance and FAQs ahead of registration. Cross-Registration (PCHE) Full-time Carnegie Mellon students may take courses for credit through the Pittsburgh Council on Higher Education (PCHE). The purpos
+  Top-2: score=0.332; doc_id=registration-four-steps; chunk=registration-four-steps#6; audience=student
+    You will need to reach out to either your advisor (for academic or planning purposes) or The HUB (for any financial hold). If you are unable to register because of an academic hold placed by your department or a financial hold placed by Stu
+  Top-3: score=0.302; doc_id=registration-four-steps; chunk=registration-four-steps#7; audience=student
+    For questions regarding a financial hold, you can contact your HUB Liaison. Step 4: Register for Classes Click the Registration button on your SIO homepage or select Registration from the Course Schedule tab When your registration start tim
+
+Q5: Tôi có giờ bắt đầu đăng ký cụ thể không?
+Gold answer: Với sinh viên, giờ được gán và xem ở trang Registration hoặc Plan Schedule trong SIO; undergraduate dùng ba chữ số cuối của ID Card.
+Gold doc_id: registration-start-times; metadata_filter={'audience': 'student'}
+  Top-1: score=0.413; doc_id=course-registration; chunk=course-registration#8; audience=student
+    Review the updated Course Time Conflicts guidance and FAQs ahead of registration. Cross-Registration (PCHE) Full-time Carnegie Mellon students may take courses for credit through the Pittsburgh Council on Higher Education (PCHE). The purpos
+  Top-2: score=0.332; doc_id=registration-four-steps; chunk=registration-four-steps#6; audience=student
+    You will need to reach out to either your advisor (for academic or planning purposes) or The HUB (for any financial hold). If you are unable to register because of an academic hold placed by your department or a financial hold placed by Stu
+  Top-3: score=0.302; doc_id=registration-four-steps; chunk=registration-four-steps#7; audience=student
+    For questions regarding a financial hold, you can contact your HUB Liaison. Step 4: Register for Classes Click the Registration button on your SIO homepage or select Registration from the Course Schedule tab When your registration start tim
