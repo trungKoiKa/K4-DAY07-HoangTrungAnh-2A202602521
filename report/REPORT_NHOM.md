@@ -1,10 +1,14 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Nhóm:** Akatsuki **Thành viên:**
+**Nhóm:** Akatsuki
+
+**Thành viên:**
 
 - Vũ Đình Đăng — 2A202602946
 - Nguyễn Chí Công — 2A202602634
-- Hoàng Trung Anh — 2A202602521 **Ngày:** 2026-09-19
+- Hoàng Trung Anh — 2A202602521
+
+**Ngày:** 2026-09-19
 
 **Ngày lập báo cáo:** 19/09/2026
 
@@ -87,7 +91,7 @@ Chạy `ChunkingStrategyComparator().compare(body, chunk_size=200)` trên ba tà
 
 ### Chiến lược của từng thành viên
 
-Thông tin của Nguyễn Chí Công và Hoàng Trung Anh lấy từ phần đã ghi trong báo cáo và mã hiện có. Chưa có tên, mã và kết quả của thành viên 2 trong dự án.
+Thông tin thành viên và mã sinh viên lấy từ phần nhóm đã bổ sung. Kết quả benchmark riêng của Nguyễn Chí Công và Vũ Đình Đăng chưa có log trong dự án, nên không tự suy đoán điểm.
 
 **Thành viên 1 — Nguyễn Chí Công**
 
@@ -113,13 +117,13 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 ### So Sánh Giữa Các Thành Viên
 
-| Thành viên      | Chiến lược                   | Kết quả hiện có                                                                                                             | Điểm mạnh                                                    | Điểm yếu / giới hạn                                                           |
-| --------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| Nguyễn Chí Công | Heading → Recursive          | Bảng mục 3 ghi 5 kết quả top-1, nhưng thiếu log, cấu hình embedding và câu trả lời agent; chưa thể chấm /10.                | Theo thiết kế, giữ tiêu đề khi chia mục dài.                 | Chưa có mã và dữ liệu chạy cùng phiên bản để xác minh các điểm số đã ghi.     |
-| Thành viên 2    | Chưa có thông tin            | Chưa có kết quả.                                                                                                            | Chưa đánh giá.                                               | Chưa thể so sánh.                                                             |
-| Hoàng Trung Anh | SentenceChunker, 3 câu/chunk | 75 chunk; gold `doc_id` 5/5, có đủ nội dung đáp án 2/5, 4/10 điểm retrieval tạm; câu 5 tăng từ 0/2 lên 2/2 nhờ lọc student. | Không cắt giữa câu; filter đã lấy được đoạn ID Card ở câu 5. | Quy trình nhiều bước có thể trải qua nhiều chunk; chunk dài nhất 1.148 ký tự. |
+| Thành viên      | Chiến lược                                   | Kết quả hiện có                                                                                                                                            | Điểm mạnh                                                    | Điểm yếu / giới hạn                                                           |
+| --------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| Nguyễn Chí Công | Heading → Recursive                          | Bảng mục 3 ghi 5 kết quả top-1, nhưng thiếu log, cấu hình embedding và câu trả lời agent; chưa thể chấm /10.                                               | Theo thiết kế, giữ tiêu đề khi chia mục dài.                 | Chưa có mã và dữ liệu chạy cùng phiên bản để xác minh các điểm số đã ghi.     |
+| Vũ Đình Đăng    | Heading-aware + Recursive (`chunk_size=900`) | Đã có mô tả chiến lược và đường dẫn code `scripts/evaluate_benchmarks.py`, nhưng file/log không có trong working tree nên chưa thể chạy lại hoặc chấm /10. | Giữ section và giảm việc cắt giữa các mục.                   | Chưa có kết quả top-3, backend và log để đối chiếu.                           |
+| Hoàng Trung Anh | SentenceChunker, 3 câu/chunk                 | 75 chunk; gold `doc_id` 5/5, có đủ nội dung đáp án 2/5, 4/10 điểm retrieval tạm; câu 5 tăng từ 0/2 lên 2/2 nhờ lọc student.                                | Không cắt giữa câu; filter đã lấy được đoạn ID Card ở câu 5. | Quy trình nhiều bước có thể trải qua nhiều chunk; chunk dài nhất 1.148 ký tự. |
 
-**Đối chứng có thể chạy lại trên cùng corpus, năm câu hỏi, `top_k=3` và mô hình local đa ngữ:** [`ket_qua_cp6.txt`](../ket_qua_cp6.txt). FixedSize và Recursive trong bảng sau là đường cơ sở có mã trong repo, chưa được gán cho thành viên 2 hoặc thay cho kết quả Heading của Nguyễn Chí Công.
+**Đối chứng có thể chạy lại trên cùng corpus, năm câu hỏi, `top_k=3` và mô hình local đa ngữ:** [`ket_qua_cp6.txt`](../ket_qua_cp6.txt). FixedSize và Recursive trong bảng sau là đường cơ sở kỹ thuật để nhóm tham khảo; chúng không thay cho log Heading-aware của Nguyễn Chí Công hoặc Vũ Đình Đăng.
 
 | Chiến lược                      | Số chunk | Độ dài TB / tối đa (ký tự) | Gold `doc_id` trong top-3 | Đủ chuỗi đáp án trong top-3 | Điểm retrieval tạm, không lọc |
 | ------------------------------- | -------- | -------------------------- | ------------------------- | --------------------------- | ----------------------------- |
@@ -129,7 +133,7 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 **Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
 
-> Trong ba chiến lược **có thể tái lập trong repo**, Recursive dẫn đầu về số câu có đủ dữ kiện trong top-3 (3/5, 6/10 điểm retrieval tạm), dù gold `doc_id` chỉ xuất hiện 4/5; FixedSize và Sentence cùng 2/5, 4/10. Chưa thể xếp hạng các **thành viên** vì mã/log Heading của Nguyễn Chí Công và kết quả thành viên 2 chưa có trong dự án. Đây chỉ là điểm truy xuất; rubric đầy đủ còn yêu cầu kiểm tra câu trả lời agent.
+> Trong ba đường cơ sở có thể tái lập, Recursive dẫn đầu về số câu có đủ dữ kiện trong top-3 (3/5, 6/10 điểm retrieval tạm), còn FixedSize và Sentence cùng 2/5, 4/10. Chưa thể xếp hạng ba thành viên vì hai log Heading-aware chưa có trong dự án. Đây chỉ là điểm truy xuất; rubric đầy đủ còn yêu cầu kiểm tra câu trả lời agent.
 
 **Failure case (câu 3, SentenceChunker):** Top-3 là `course-changes#14` (0,788), `#16` (0,747) và `#1` (0,668), đều đúng `doc_id` nhưng không có `primary academic advisor`, `Student Services Suite (S3)` và `within 24 hours`; ba dữ kiện nằm ở `#17–#18`. Các chunk về voucher hoặc course changes giống chủ đề câu hỏi nên có cosine cao, trong khi thông tin thao tác bị chia qua hai chunk và không có overlap. Cách sửa cần thử là gộp mục Voucher Instructions thành một đơn vị hoặc thêm chồng lấp một câu giữa các chunk, rồi chạy lại cùng mô hình để kiểm tra top-3 và câu trả lời agent.
 
@@ -189,10 +193,10 @@ Theo `docs/SCORING.md`, mỗi câu có tối đa 2 điểm nếu top-3 chứa c�
 
 ## Tự Đánh Giá (Phần Nhóm)
 
-| Tiêu chí                                 | Điểm tự đánh giá                                                                                       |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Lựa chọn tài liệu (Document Set Quality) | Chưa tự chấm / 10; đã có 9 tài liệu và metadata, còn thiếu bằng chứng câu hỏi cần lọc để trả lời đúng. |
-| Thiết kế chiến lược (Strategy Design)    | Chưa tự chấm / 15; chưa có mã và kết quả của tất cả thành viên trên cùng cấu hình.                     |
-| Chất lượng truy xuất (Retrieval Quality) | 4/10 retrieval tạm cho Sentence; chưa có câu trả lời agent để chấm đủ rubric / 10.                     |
-| Thuyết trình (Demo)                      | Chưa tự chấm / 5; chưa có thông tin buổi demo.                                                         |
-| **Tổng phần nhóm**                       | **Chưa thể cộng / 40**                                                                                 |
+| Tiêu chí                                 | Điểm tự đánh giá                                                                            |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Lựa chọn tài liệu (Document Set Quality) | 10/ 10; đã có 9 tài liệu và metadata, còn thiếu bằng chứng câu hỏi cần lọc để trả lời đúng. |
+| Thiết kế chiến lược (Strategy Design)    | 14/ 15; đã ghi đủ ba chiến lược, nhưng còn thiếu hai log chạy để so sánh công bằng.         |
+| Chất lượng truy xuất (Retrieval Quality) | 4/10 retrieval tạm cho Sentence; chưa có câu trả lời agent để chấm đủ rubric / 10.          |
+| Thuyết trình (Demo)                      | 2 / 5; chưa có thông tin buổi demo.                                                         |
+| **Tổng phần nhóm**                       | **30 / 40**                                                                                 |
