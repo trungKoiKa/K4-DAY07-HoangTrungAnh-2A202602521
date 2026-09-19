@@ -86,14 +86,16 @@ Chạy `ChunkingStrategyComparator().compare(body, chunk_size=200)` trên ba tà
 
 > Mỗi thành viên điền một khối dưới đây (copy thêm nếu nhóm có nhiều hơn 3 người).
 
-**Thành viên 1 — [Tên]**
+**Thành viên 1 — Nguyễn Chí Công**
 
-- **Loại chiến lược:** [FixedSize / Sentence / Recursive / custom]
-- **Mô tả & lý do chọn cho chủ đề này:** *(2-3 câu)*
+- **Loại chiến lược:** custom `HeadingChunker` → `RecursiveChunker`
+- **Mô tả & lý do chọn cho chủ đề này:** Trang quy định CMU có heading/mục sẵn, nên mỗi heading là đơn vị ngữ nghĩa tự nhiên. Chiến lược tách trước heading; nếu mục vượt 500 ký tự thì dùng recursive để cắt phần thân và lặp lại heading ở từng mảnh con, nhờ vậy chunk sau vẫn biết mình đang nói về mục nào.
 - **Code snippet (nếu custom):**
 
 ```python
-# Dán mã nguồn (implementation) vào đây
+class HeadingChunker:
+    # split at Markdown headings; long sections use RecursiveChunker
+    # and prefix the original heading to every child chunk
 ```
 
 **Thành viên 2 — [Tên]**
@@ -144,17 +146,18 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 > Cách chấm (theo `docs/SCORING.md`): **2 điểm/câu** — top-3 chứa chunk liên quan + agent trả lời đúng (2), có liên quan nhưng thiếu/không ở top-1 (1), không có trong top-3 (0).
 
-| #   | Câu hỏi | Chiến lược tốt nhất cho câu này | Có chunk liên quan trong top-3? | Ghi chú |
-| --- | ------- | ------------------------------- | ------------------------------- | ------- |
-| 1   |         |                                 |                                 |         |
-| 2   |         |                                 |                                 |         |
-| 3   |         |                                 |                                 |         |
-| 4   |         |                                 |                                 |         |
-| 5   |         |                                 |                                 |         |
+| #   | Câu hỏi                             | Chiến lược tốt nhất cho câu này                 | Có chunk liên quan trong top-3?                    | Ghi chú                                                           |
+| --- | ----------------------------------- | ----------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------- |
+| 1   | Quy trình đăng ký lớp trùng giờ     | HeadingChunker + Recursive                      | Có, top-1: `course-registration`, score 0.764      | Chunk mô tả đúng Course Time Conflict Request và chuỗi phê duyệt. |
+| 2   | Ngày đăng ký của sinh viên năm nhất | HeadingChunker + Recursive                      | Có, top-1: `registration-start-times`, score 0.760 | Chunk nêu rõ Friday.                                              |
+| 3   | Thao tác trước khi dùng voucher     | HeadingChunker + Recursive + `audience=student` | Có, top-1: `course-changes`, score 0.783           | Lọc bỏ chunk faculty/staff trước xếp hạng.                        |
+| 4   | Số voucher của undergraduate        | HeadingChunker + Recursive + `audience=student` | Có, top-1: `course-changes`, score 0.842           | Chunk chứa chính xác ba voucher và một mỗi kỳ.                    |
+| 5   | Vị trí xem start time trong SIO     | HeadingChunker + Recursive + `audience=student` | Có, top-1: `registration-four-steps`, score 0.821  | Chunk chứa đúng Registration page / Course Schedule tab.          |
+
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
 
-> *Viết 2-3 câu:*
+> Có. Query 3, 4 và 5 gọi `search_with_filter(..., metadata_filter={"audience": "student"})`, nên các chunk faculty/staff/all bị loại **trước** khi xếp hạng. Điều này đặc biệt cần khi các tài liệu cùng nói về registration nhưng quy tắc áp dụng cho các đối tượng khác nhau; không lọc, top-k có thể bị chiếm bởi chunk sai đối tượng.
 
 ---
 
