@@ -1,8 +1,10 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Nhóm:** Chưa có tên nhóm trong tài liệu dự án
+**Nhóm:** Akatsuki **Thành viên:**
 
-**Thành viên:** Nguyễn Chí Công (chiến lược heading), Hoàng Trung Anh (SentenceChunker); chưa có thông tin thành viên còn lại.
+- Vũ Đình Đăng — 2A202602946
+- Nguyễn Chí Công — 2A202602634
+- Hoàng Trung Anh — 2A202602521 **Ngày:** 2026-09-19
 
 **Ngày lập báo cáo:** 19/09/2026
 
@@ -93,11 +95,11 @@ Thông tin của Nguyễn Chí Công và Hoàng Trung Anh lấy từ phần đã
 - **Mô tả & lý do chọn cho chủ đề này:** Trang quy định CMU có heading/mục sẵn, nên mỗi heading là đơn vị ngữ nghĩa tự nhiên. Chiến lược tách trước heading; nếu mục vượt 500 ký tự thì dùng recursive để cắt phần thân và lặp lại heading ở từng mảnh con, nhờ vậy chunk sau vẫn biết mình đang nói về mục nào.
 - **Mã thực thi:** Chưa có file triển khai hoặc kết quả chạy của Nguyễn Chí Công trong dự án hiện tại; cần bổ sung để nhóm có thể tái lập phép so sánh. Mô tả ở trên là chiến lược do thành viên ghi trong báo cáo. Ở bản corpus hiện tại, ngoài tiêu đề cấp `#`, chỉ `staff-non-degree-registration.md` còn tiêu đề cấp `##`; các nhãn mục của tài liệu khác là văn bản thường, nên cần thống nhất bản corpus khi kiểm tra chiến lược theo heading.
 
-**Thành viên 2 — Chưa có thông tin**
+**Thành viên 2 — Vũ Đình Đăng (2A202602946)**
 
-- **Loại chiến lược:** Chưa được cung cấp.
-- **Mô tả & lý do chọn:** Cần thành viên bổ sung chiến lược thực tế, tham số và lý do chọn trước khi so sánh.
-- **Mã thực thi:** Chưa được cung cấp.
+- **Loại chiến lược:** Heading-aware + `RecursiveChunker(chunk_size=900)`
+- **Mô tả & lý do chọn:** Tách theo heading giữ các bước/quy định trong cùng mục Markdown; section quá dài được tách tiếp theo paragraph/câu.
+- **Code:** `scripts/evaluate_benchmarks.py:chunk_by_heading`.
 
 **Thành viên 3 — Hoàng Trung Anh**
 
@@ -111,15 +113,25 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 ### So Sánh Giữa Các Thành Viên
 
-| Thành viên | Chiến lược | Kết quả hiện có | Điểm mạnh | Điểm yếu / giới hạn |
-| ---------- | ---------- | --------------- | --------- | ------------------- |
-| Nguyễn Chí Công | Heading → Recursive | Bảng mục 3 ghi 5 kết quả top-1, nhưng thiếu log, cấu hình embedding và câu trả lời agent; chưa thể chấm /10. | Theo thiết kế, giữ tiêu đề khi chia mục dài. | Chưa có mã và dữ liệu chạy cùng phiên bản để xác minh các điểm số đã ghi. |
-| Thành viên 2 | Chưa có thông tin | Chưa có kết quả. | Chưa đánh giá. | Chưa thể so sánh. |
-| Hoàng Trung Anh | SentenceChunker, 3 câu/chunk | 75 chunk; top-3 có một đoạn liên quan một phần ở câu 1; chưa chạy agent nên chưa chấm /10. | Không cắt giữa câu; ít chunk hơn fixed/recursive trong baseline. | Một quy trình có thể trải qua nhiều chunk; lượt chạy hiện dùng embedding giả lập. |
+| Thành viên      | Chiến lược                   | Kết quả hiện có                                                                                                             | Điểm mạnh                                                    | Điểm yếu / giới hạn                                                           |
+| --------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| Nguyễn Chí Công | Heading → Recursive          | Bảng mục 3 ghi 5 kết quả top-1, nhưng thiếu log, cấu hình embedding và câu trả lời agent; chưa thể chấm /10.                | Theo thiết kế, giữ tiêu đề khi chia mục dài.                 | Chưa có mã và dữ liệu chạy cùng phiên bản để xác minh các điểm số đã ghi.     |
+| Thành viên 2    | Chưa có thông tin            | Chưa có kết quả.                                                                                                            | Chưa đánh giá.                                               | Chưa thể so sánh.                                                             |
+| Hoàng Trung Anh | SentenceChunker, 3 câu/chunk | 75 chunk; gold `doc_id` 5/5, có đủ nội dung đáp án 2/5, 4/10 điểm retrieval tạm; câu 5 tăng từ 0/2 lên 2/2 nhờ lọc student. | Không cắt giữa câu; filter đã lấy được đoạn ID Card ở câu 5. | Quy trình nhiều bước có thể trải qua nhiều chunk; chunk dài nhất 1.148 ký tự. |
+
+**Đối chứng có thể chạy lại trên cùng corpus, năm câu hỏi, `top_k=3` và mô hình local đa ngữ:** [`ket_qua_cp6.txt`](../ket_qua_cp6.txt). FixedSize và Recursive trong bảng sau là đường cơ sở có mã trong repo, chưa được gán cho thành viên 2 hoặc thay cho kết quả Heading của Nguyễn Chí Công.
+
+| Chiến lược                      | Số chunk | Độ dài TB / tối đa (ký tự) | Gold `doc_id` trong top-3 | Đủ chuỗi đáp án trong top-3 | Điểm retrieval tạm, không lọc |
+| ------------------------------- | -------- | -------------------------- | ------------------------- | --------------------------- | ----------------------------- |
+| FixedSize (`500`, overlap `50`) | 68       | 472,2 / 500                | 5/5                       | 2/5                         | 4/10                          |
+| Sentence (`3` câu)              | 75       | 385,8 / 1.148              | 5/5                       | 2/5                         | 4/10                          |
+| Recursive (`500`)               | 75       | 388,8 / 499                | 4/5                       | 3/5                         | 6/10                          |
 
 **Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
 
-> Chưa thể xếp hạng giữa các thành viên: kết quả SentenceChunker đã chạy bằng `MockEmbedder`, còn bảng điểm Heading hiện thiếu mã, cấu hình embedding và log để tái lập; thành viên 2 chưa có kết quả. Về mặt cấu trúc, các quy trình nhiều bước như Course Time Conflict và Voucher Instructions dễ bị `SentenceChunker` chia qua nhiều chunk; chiến lược theo mục có thể giữ ngữ cảnh tốt hơn nếu corpus có heading Markdown và được kiểm tra trên cùng bộ câu hỏi, embedding và `top_k`.
+> Trong ba chiến lược **có thể tái lập trong repo**, Recursive dẫn đầu về số câu có đủ dữ kiện trong top-3 (3/5, 6/10 điểm retrieval tạm), dù gold `doc_id` chỉ xuất hiện 4/5; FixedSize và Sentence cùng 2/5, 4/10. Chưa thể xếp hạng các **thành viên** vì mã/log Heading của Nguyễn Chí Công và kết quả thành viên 2 chưa có trong dự án. Đây chỉ là điểm truy xuất; rubric đầy đủ còn yêu cầu kiểm tra câu trả lời agent.
+
+**Failure case (câu 3, SentenceChunker):** Top-3 là `course-changes#14` (0,788), `#16` (0,747) và `#1` (0,668), đều đúng `doc_id` nhưng không có `primary academic advisor`, `Student Services Suite (S3)` và `within 24 hours`; ba dữ kiện nằm ở `#17–#18`. Các chunk về voucher hoặc course changes giống chủ đề câu hỏi nên có cosine cao, trong khi thông tin thao tác bị chia qua hai chunk và không có overlap. Cách sửa cần thử là gộp mục Voucher Instructions thành một đơn vị hoặc thêm chồng lấp một câu giữa các chunk, rồi chạy lại cùng mô hình để kiểm tra top-3 và câu trả lời agent.
 
 ---
 
@@ -129,31 +141,31 @@ CHUNKER = SentenceChunker(max_sentences_per_chunk=3)
 
 Năm câu hỏi dùng chung đều có căn cứ trong corpus. Cột cuối giữ `doc_id` của tài liệu nguồn để `bench.py` đọc đúng bộ câu hỏi. Điều kiện “ít nhất một câu cần lọc `audience=student` mới trả lời đúng” chưa được chứng minh bằng lượt chạy hiện có (xem đối chiếu câu 5 bên dưới).
 
-| #   | Câu hỏi (Query)                                                         | Câu trả lời chuẩn (Gold Answer)                                                                                                      | Tài liệu nguồn (`doc_id`) |
-| --- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
-| 1   | Quy trình đăng ký hai lớp trùng giờ là gì?                              | Gửi Course Time Conflict Request trên SIO; advisor và hai giảng viên phê duyệt, sau đó sinh viên chấp nhận điều kiện và đăng ký.     | `course-registration` |
-| 2   | Sinh viên đại học năm nhất đăng ký vào ngày nào trong kỳ thu/xuân?      | Thứ Sáu.                                                                                                                             | `registration-start-times` |
-| 3   | Trước khi dùng voucher sau hạn drop/P/NP, sinh viên phải làm gì?        | Trao đổi với primary academic advisor; advisor nhập voucher vào S3, sinh viên xác nhận trong 24 giờ.                                 | `course-changes` |
-| 4   | Sinh viên đại học có bao nhiêu voucher trong toàn khóa và trong một kỳ? | Ba voucher toàn khóa; tối đa một voucher mỗi kỳ (kể cả hè).                                                                          | `course-changes` |
-| 5   | Tôi có giờ bắt đầu đăng ký cụ thể không?                                | Với sinh viên, giờ được gán và xem ở trang Registration hoặc Plan Schedule trong SIO; undergraduate dùng ba chữ số cuối của ID Card. | `registration-start-times` |
+| #   | Câu hỏi (Query)                                                                                          | Câu trả lời chuẩn (Gold Answer)                                                                                                                         | Tài liệu nguồn (`doc_id`)  |
+| --- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| 1   | Quy trình đăng ký hai lớp trùng giờ là gì?                                                               | Gửi Course Time Conflict Request trên SIO; advisor và hai giảng viên phê duyệt, sau đó sinh viên chấp nhận điều kiện và đăng ký.                        | `course-registration`      |
+| 2   | Sinh viên đại học năm nhất đăng ký vào ngày nào trong kỳ thu/xuân?                                       | Thứ Sáu.                                                                                                                                                | `registration-start-times` |
+| 3   | Trước khi dùng voucher sau hạn drop/P/NP, sinh viên phải làm gì?                                         | Trao đổi với primary academic advisor; advisor nhập voucher vào S3, sinh viên xác nhận trong 24 giờ.                                                    | `course-changes`           |
+| 4   | Sinh viên đại học có bao nhiêu voucher trong toàn khóa và trong một kỳ?                                  | Ba voucher toàn khóa; tối đa một voucher mỗi kỳ (kể cả hè).                                                                                             | `course-changes`           |
+| 5   | Nếu là sinh viên đại học, giờ đăng ký học phần được xếp theo ID Card hay phải đợi hết Registration Week? | Giờ đăng ký của undergraduate được gán dựa trên ba chữ số cuối ID Card; sinh viên có thể đăng ký từ giờ được gán, không phải đợi hết Registration Week. | `registration-start-times` |
 
-Trong lượt SentenceChunker hiện tại, các đoạn chứa dữ kiện tương ứng là: câu 1 `course-registration#5–#7`; câu 2 `registration-start-times#2`; câu 3 `course-changes#17–#18`; câu 4 `course-changes#15`; câu 5 `registration-start-times#0–#1`. Việc một đáp án nằm ở nhiều chunk là giới hạn cần tính khi đánh giá top-3.
+Trong lượt SentenceChunker hiện tại, các đoạn chứa dữ kiện tương ứng là: câu 1 `course-registration#5–#7`; câu 2 `registration-start-times#2`; câu 3 `course-changes#17–#18`; câu 4 `course-changes#15`; câu 5 `registration-start-times#1` và `#3`. Việc một đáp án nằm ở nhiều chunk là giới hạn cần tính khi đánh giá top-3.
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
-Theo `docs/SCORING.md`, mỗi câu có tối đa 2 điểm nếu top-3 chứa căn cứ liên quan và câu trả lời của agent chính xác. Bảng dưới giữ nguyên các số top-1 Heading đã được điền trước đó; dự án hiện không có log, mã chạy hoặc tên embedding tương ứng để xác minh. Kết quả Sentence lấy từ [`ket_qua_benchmark.txt`](../ket_qua_benchmark.txt), dùng `MockEmbedder`, `top_k=3`; không có câu trả lời agent của hai lượt trong dự án để chấm điểm /10 hoặc chọn chiến lược tốt nhất.
+Theo `docs/SCORING.md`, mỗi câu có tối đa 2 điểm nếu top-3 chứa căn cứ liên quan và câu trả lời của agent chính xác. Kết quả có thể tái lập lấy từ [`ket_qua_cp6.txt`](../ket_qua_cp6.txt), dùng `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, `top_k=3`, và có A/B cho câu 5. Chưa có câu trả lời agent trong dự án, nên các điểm dưới đây là điểm retrieval tạm, chưa phải điểm rubric đầy đủ.
 
-| # | Heading → Recursive (số đã ghi, chưa xác minh) | SentenceChunker (đã chạy) | Đối chiếu với đáp án chuẩn |
-| --- | --- | --- | --- |
-| 1 | Top-1 `course-registration`, 0,764 | Top-3 có `course-registration#5`, 0,227 | Sentence nêu bước gửi yêu cầu trên SIO nhưng thiếu chuỗi phê duyệt ở `#6–#7`. |
-| 2 | Top-1 `registration-start-times`, 0,760 | Top-3 đều thuộc `voucher-process-faq` | Sentence không lấy được đoạn nêu Friday. |
-| 3 | Top-1 `course-changes`, 0,783; báo cáo ghi đã lọc student | Top-1 `course-changes#10`, 0,290; top-3 thiếu `#17–#18` | Sentence lấy phần late withdrawal, không đủ bước voucher. |
-| 4 | Top-1 `course-changes`, 0,842; báo cáo ghi đã lọc student | Top-1 `course-changes#6`, 0,233; top-3 thiếu `#15` | Sentence lấy hạn drop, không lấy số voucher. |
-| 5 | Top-1 `registration-four-steps`, 0,821; báo cáo ghi đã lọc student | Top-1 `course-registration#8`, 0,413; top-3 thiếu `registration-start-times` | Lọc student trong lượt Sentence không đổi top-3; kết quả Heading top-1 là tài liệu khác tài liệu gold. |
+| #   | Heading → Recursive (số đã ghi, chưa xác minh) | SentenceChunker (đã chạy)                                                          | Đối chiếu với đáp án chuẩn                                                  |
+| --- | ---------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| 1   | Chưa có log xác minh                           | `course-registration` hạng 3 nhưng thiếu chuỗi đáp án                              | Gold doc đúng chủ đề nhưng top-3 không chứa đủ quy trình.                   |
+| 2   | Chưa có log xác minh                           | `registration-start-times` hạng 1, đủ “Friday”                                     | Đạt mức nội dung ở top-1.                                                   |
+| 3   | Chưa có log xác minh                           | `course-changes` hạng 1 nhưng thiếu S3 và 24 giờ                                   | Failure do các bước thao tác nằm ở chunk khác.                              |
+| 4   | Chưa có log xác minh                           | `course-changes` hạng 1, đủ ba voucher và một mỗi kỳ                               | Đạt mức nội dung ở top-1.                                                   |
+| 5   | Chưa có log xác minh                           | Không lọc: gold hạng 1 nhưng thiếu ID Card; lọc student: gold hạng 1 và đủ ID Card | A/B cho thấy filter loại chunk faculty và đưa đoạn undergraduate vào top-3. |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
 
-> Với SentenceChunker, lọc `audience=student` ở câu 5 giảm tập ứng viên từ 75 xuống 57 chunk, nhưng top-3 và đáp án có thể rút ra vẫn không đổi. Bảng Heading ghi đã lọc ở câu 3–5, song thiếu kết quả không lọc để đo tác động; do đó chưa thể kết luận lọc đã cải thiện truy xuất. Nhóm cần chạy hai lượt trên cùng embedding và corpus, rồi ghi top-3 trước/sau lọc cho một câu hỏi mà câu trả lời phụ thuộc đối tượng áp dụng.
+> Có. Với SentenceChunker và embedding local, câu 5 không lọc đưa `faculty-staff-non-degree-registration#12` vào top-3 và thiếu dữ kiện ID Card; khi lọc `audience=student`, chunk faculty bị loại, `registration-start-times#1` vào top-3 và nội dung trả lời đủ. Đây là A/B hợp lệ vì top-3 và kết quả nội dung thay đổi.
 
 ---
 
@@ -163,11 +175,11 @@ Theo `docs/SCORING.md`, mỗi câu có tối đa 2 điểm nếu top-3 chứa c�
 
 - Corpus có 9 tài liệu chính thức về đăng ký học phần, gồm 6 tài liệu `student`, 1 `faculty`, 1 `staff` và 1 `all`; metadata cho phép lọc theo đối tượng trước khi xếp hạng.
 - Với `course-registration.md` ở baseline `chunk_size=200`, SentenceChunker tạo 10 chunk, FixedSizeChunker 20 và RecursiveChunker 26. Sentence giữ nguyên câu nhưng không bảo đảm giữ trọn quy trình: đáp án câu 1 nằm ở ba chunk `#5–#7`.
-- Benchmark Sentence dùng 75 chunk và `MockEmbedder`: chỉ câu 1 có đoạn top-3 liên quan một phần; lọc student ở câu 5 không thay đổi top-3. Điểm similarity của mock không chứng minh chất lượng hiểu nghĩa giữa câu hỏi tiếng Việt và tài liệu tiếng Anh.
+- Benchmark CP6 dùng backend local đa ngữ trên 75 chunk của SentenceChunker; kiểm tra theo `doc_id` cho 5/5 câu nhưng kiểm tra theo chuỗi đáp án chỉ cho 2/5 câu, 4/10 điểm retrieval tạm. A/B câu 5 cho thấy metadata `audience=student` có tác động thực tế.
 
 **Bài học rút ra khi so sánh trong nhóm:**
 
-> Cùng một tài liệu, ranh giới chunk quyết định agent nhìn thấy cả quy trình hay chỉ một bước: SentenceChunker giữ nguyên từng câu nhưng tách quy trình Course Time Conflict và voucher qua nhiều chunk. Baseline cho thấy đánh đổi giữa số chunk và độ dài trung bình; chưa thể kết luận Heading tốt hơn Sentence từ các điểm hiện có vì chưa có kết quả các thành viên trên cùng corpus, embedding và cách đánh giá. Phần trình bày nên đối chiếu trực tiếp nội dung chunk, không chỉ so score.
+> Cùng một tài liệu, ranh giới chunk quyết định agent nhìn thấy cả quy trình hay chỉ một bước. SentenceChunker giữ câu nhưng có chunk dài tới 1.148 ký tự; Recursive giới hạn dưới 500 ký tự và đạt 3/5 câu có đủ dữ kiện trong top-3. Việc kiểm `doc_id` riêng lẻ sẽ thổi phồng kết quả, vì câu 3 có cả top-3 cùng `course-changes` nhưng vẫn thiếu bước S3 và 24 giờ.
 
 **Nếu làm lại, nhóm sẽ thay đổi gì trong chiến lược dữ liệu (data strategy)?**
 
@@ -177,10 +189,10 @@ Theo `docs/SCORING.md`, mỗi câu có tối đa 2 điểm nếu top-3 chứa c�
 
 ## Tự Đánh Giá (Phần Nhóm)
 
-| Tiêu chí                                 | Điểm tự đánh giá |
-| ---------------------------------------- | ---------------- |
+| Tiêu chí                                 | Điểm tự đánh giá                                                                                       |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | Lựa chọn tài liệu (Document Set Quality) | Chưa tự chấm / 10; đã có 9 tài liệu và metadata, còn thiếu bằng chứng câu hỏi cần lọc để trả lời đúng. |
-| Thiết kế chiến lược (Strategy Design)    | Chưa tự chấm / 15; chưa có mã và kết quả của tất cả thành viên trên cùng cấu hình. |
-| Chất lượng truy xuất (Retrieval Quality) | Chưa tự chấm / 10; mới có benchmark mock của Sentence, chưa có câu trả lời agent. |
-| Thuyết trình (Demo)                      | Chưa tự chấm / 5; chưa có thông tin buổi demo. |
-| **Tổng phần nhóm**                       | **Chưa thể cộng / 40** |
+| Thiết kế chiến lược (Strategy Design)    | Chưa tự chấm / 15; chưa có mã và kết quả của tất cả thành viên trên cùng cấu hình.                     |
+| Chất lượng truy xuất (Retrieval Quality) | 4/10 retrieval tạm cho Sentence; chưa có câu trả lời agent để chấm đủ rubric / 10.                     |
+| Thuyết trình (Demo)                      | Chưa tự chấm / 5; chưa có thông tin buổi demo.                                                         |
+| **Tổng phần nhóm**                       | **Chưa thể cộng / 40**                                                                                 |

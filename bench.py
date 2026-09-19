@@ -15,6 +15,7 @@ from typing import Callable
 
 from dotenv import load_dotenv
 
+from benchmark_eval import evaluate_results
 from src.chunking import FixedSizeChunker, RecursiveChunker, SentenceChunker  # alternative strategies
 from src.embeddings import EMBEDDING_PROVIDER_ENV, LocalEmbedder, MockEmbedder
 from src.models import Document
@@ -142,6 +143,16 @@ def main() -> int:
                     f"chunk={result['id']}; audience={result['metadata'].get('audience')}"
                 )
                 lines.append(f"    {excerpt}")
+            evaluation = evaluate_results(number, gold_doc_id, results)
+            lines.append(
+                "  Check: "
+                f"doc_hit={evaluation['doc_hit']}; "
+                f"gold_rank={evaluation['gold_rank']}; "
+                f"answer_in_context={evaluation['answer_in_context']}; "
+                f"retrieval_points={evaluation['retrieval_points']}/2"
+            )
+            if evaluation["missing_phrases"]:
+                lines.append("  Missing answer phrases: " + "; ".join(evaluation["missing_phrases"]))
 
     output = "\n".join(lines) + "\n"
     OUTPUT_FILE.write_text(output, encoding="utf-8")
